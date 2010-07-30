@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<head>
+	<title>Apple Developer Favorites</title>
+</head>
+<script type="text/javascript" src="jquery.js"></script>
+<script>
+
+// Register for the validate and command events.
+safari.application.addEventListener("command", performCommand, false);
+safari.application.addEventListener("validate", validateCommand, false);
+
+const numberOfTracksToFetch = 20;
+
+$(document).ready(function(){
+});
+
+function performCommand(event) {	
+	switch (event.command) {
+	case "toolbarButtonClicked":
+		toggleBar();
+		break;
+	}
+}
+
+function activeBar() {
+	var bars = safari.extension.bars;
+	var activeBrowserWindow = safari.application.activeBrowserWindow;
+	for (var i = 0; i < bars.length; ++i) {
+		if (bars[i].browserWindow === activeBrowserWindow && bars[i].identifier == "tumblrPlayBar") {
+			var theBar = bars[i];
+		}
+	}
+	return theBar;
+}
+
+function activeButton() {
+	var toolbarItems = safari.extension.toolbarItems;
+	var toolbarItem;
+	$.each(toolbarItems, function(i, val) {
+		var theID = val.identifier;
+		
+		if (theID.indexOf('tumblrplaybutton') != -1) {
+			toolbarItem = val;
+			
+		}
+		
+	});
+	return toolbarItem;
+	
+}
+ 
+function validateCommand(event) {
+    // You should always check the command.
+	if (event.command === "toolbarButtonClicked") {
+		var email = safari.extension.secureSettings.email;
+		var password = safari.extension.secureSettings.password;
+		
+		if(!email || !password) {
+			event.target.disabled = true;
+		} else {
+			event.target.disabled = false;
+		}
+	}
+	
+    if (event.validate !== "toolbarButtonClicked")
+        return;
+}
+
+function toggleBar() {
+	var theBar = activeBar();
+	var barWindow = theBar.contentWindow;
+	if (theBar.visible) {
+		theBar.hide();
+		barWindow.resetApp();
+	} else {
+		
+		if (typeof barWindow.getAudioPosts === "function") {
+			
+			var email = safari.extension.secureSettings.email;
+			var password = safari.extension.secureSettings.password;
+			
+			if(!email || !password) {
+				theBar.hide();
+				alert("Please enter your Tumblr account details in the extension settings.");
+			} else {
+				theBar.show();
+				barWindow.getAudioPosts(email, password, "0", numberOfTracksToFetch);
+			}
+		}
+	}
+}
+
+function enteredPassword(event) {
+	var theButton = activeButton();
+	if (event.key === "password") {
+		theButton.validate();
+	}
+}
+
+safari.extension.secureSettings.addEventListener("change", enteredPassword, false);
+
+var theBar = activeBar();
+theBar.hide();
+
+</script>

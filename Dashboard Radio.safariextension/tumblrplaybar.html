@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tumblr Play Bar</title>
+	<link rel="stylesheet" href="style.css" type="text/css" charset="utf-8">
+	<link href="jquery-ui-1.8.2.custom.css" rel="stylesheet" type="text/css"/>
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="jquery-ui-1.8.2.custom.min.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+	var bars = safari.extension.bars;
+	var isABarShowing = false;
+	var theBar = myGlobal.activeBar();
+	$.each(bars, function(i, val) {
+		if (val.visible) {
+			isABarShowing = true;
+		}
+	});
+	if (isABarShowing == true) {
+		theBar.hide();
+	}
+	//$("#volume_slider").slider({ value: safari.extension.settings.volume });
+	
+});
+
+function getAudioPosts(email, password, start, num) {
+	var dataString = "email=" + email + "&password=" + password + "&start=" + start + "&num=" + num + "&type=audio&filter=text&likes=1";
+	$.ajax({
+		type: "POST",
+		url: "http://www.tumblr.com/api/dashboard",
+		data: dataString,
+		dataType: "xml",
+		success: parseXML,
+		error: requestError
+	});
+}
+
+function displayCurrentTrack() {
+	$(".current_track_off").replaceWith("<a class=\"current_track\"><span>" + (currentTrack + 1) + " of " + audioTrackArray.length + "</span></a>");
+	$(".current_track").replaceWith("<a class=\"current_track\"><span>" + (currentTrack + 1) + " of " + audioTrackArray.length + "</span></a>");
+}
+
+function displayBuyButtonWithService(service) {
+	if (service === "itunes") {
+		$(".buy_button").replaceWith("<a onclick=\"buyTrack()\" class=\"buy_button\"></a>");
+		$(".buy_button_off").replaceWith("<a onclick=\"buyTrack()\" class=\"buy_button\"></a>");
+	} else if (service === "amazon") {
+		$(".buy_button").replaceWith("<a onclick=\"buyTrack()\" class=\"buy_button\"></a>");
+		$(".buy_button_off").replaceWith("<a onclick=\"buyTrack()\" class=\"buy_button\"></a>");
+	} else if (service === "none") {
+		$(".buy_button").replaceWith("<a class=\"buy_button_off\"></a>");
+	}
+}
+
+function serviceChanged(event) {
+	if (event.key === "service") {
+		displayBuyButtonWithService(safari.extension.settings.service);
+	}
+}
+
+function parseXML(xml) {
+	$(xml).find("post").each(function() {
+		var postUrl = $(this).attr("url");
+		var postId = $(this).attr("id");
+		var reblogKey = $(this).attr("reblog-key");
+		var audioPlays = $(this).attr("audio-plays");
+		var userName = $(this).attr("name");
+		var liked = $(this).attr("liked");
+		var audioUrl = $(this).find("download-url").text();
+		var track = $(this).find("id3-title").text();
+		var artist = $(this).find("id3-artist").text();
+		var album = $(this).find("id3-album").text();
+		var art = $(this).find("id3-album-art").text();
+		var audioTrackObject = {postUrl:postUrl, postId:postId, reblogKey:reblogKey, audioPlays:audioPlays, userName:userName, liked:liked, audioUrl:audioUrl, track:track, artist:artist, album:album, art:art};
+		audioTrackArray.push(audioTrackObject);
+	});
+	
+	if (audioTrackArray.length > 0) {
+		
+		
+		var audioTrackElements = $("#audioTracks").children();
+		
+		if (audioTrackElements.length == 0) {
+			// Create the div of audio objects
+			var audioDiv = "<div id=\"audioTracks\">";
+			$.each(audioTrackArray, function(i, val) {
+				audioDiv += "<audio preload=\"auto\" id=\"track" + i + "\" src=\"" + val.audioUrl + "\"></audio>";
+			});
+
+			audioDiv += "</div>";
+			$("#audioTracks").replaceWith(audioDiv);
+			
+			$(".track_name").replaceWith("<a class=\"track_name\">Buffering...</a>");
+		} else {
+			var newTracksArray = audioTrackArray.slice(0);
+			newTracksArray.splice(0, (totalTrackCount + 1));
+			
+			$.each(newTracksArray, function(i, val) {
+				$("#audioTracks").append("<audio preload=\"auto\" id=\"track" + (i + totalTrackCount + 1) + "\" src=\"" + val.audioUrl + "\"></audio>");
+			});
+			
+			displayCurrentTrack();
+			enableUI('nextButton');
+			enableUI('previousButton');
+			
+			var notplaying = true;
+			$.each(audioTrackElements, function(i, val) {
+				if (val.paused && i == totalTrackCount) {
+					notplaying = false;
+				} else {
+					notplaying = true;
+				}
+			});
+			
+			if (notplaying == false) {
+				currentTrack += 1;
+				displayCurrentTrack();
+				updateLabel();
+				document.getElementById("track" + currentTrack).play();
+			}
+			
+		}
+		
+		totalTrackCount = audioTrackArray.length -1;
+
+		// Attach listeners to the tracks
+		$.each(audioTrackArray, function(i, val) {
+			$("#track" + i).bind('canplay', function(){
+		        canPlay(i);
+		  	});
+			$("#track" + i).bind('play', function(){
+				
+		  	});
+			$("#track" + i).bind('playing', function(){
+		        didStartPlaying(i);
+		  	});
+			$("#track" + i).bind('pause', function(){
+		        didPause(i);
+		  	});
+			$("#track" + i).bind('ended', function(){
+		        didEndPlaying(i);
+		  	});
+		});
+		
+	} else {
+		alert("Looks like there's no tracks in your Dashboard. Go follow some people that post music!");
+	}
+	
+}
+
+function updateLabel() {
+	var dataString;
+	var trackString = "<a href=\"javascript:openInTab('" + audioTrackArray[currentTrack].postUrl + "');\" class=\"track_name\">";
+	
+	if (audioTrackArray[currentTrack].track === "") {
+		trackString += "<strong>Unknown Track</strong> - ";
+	} else {
+		trackString += "<strong>" + audioTrackArray[currentTrack].track + "</strong> - ";
+	}
+	
+	if (audioTrackArray[currentTrack].artist === "") {
+		 trackString += "Unknown Artist - ";
+	} else {
+		trackString += audioTrackArray[currentTrack].artist + " - ";
+	}
+	
+	if (audioTrackArray[currentTrack].album === "") {
+		trackString += "Unknown Album</a>";
+	} else {
+		trackString += audioTrackArray[currentTrack].album + "</a>";
+	}
+	
+	$(".track_name").replaceWith(trackString);
+}
+
+function enableUI(buttonName) {
+	switch(buttonName)
+	{
+	case 'previousButton':
+	  $(".back_button_disabled").replaceWith("<a onclick=\"previousTrack()\" class=\"back_button\"></a>");
+	  break;
+	case 'nextButton':
+	  $(".forward_button_disabled").replaceWith("<a onclick=\"nextTrack()\" class=\"forward_button\"></a>");
+	  break;
+	case 'likeButton':
+	  $(".like_button_disabled").replaceWith("<a onclick=\"likeTrack()\" class=\"like_button\"></a>");
+	  break;
+	case 'likedButton':
+	  $(".liked_button_disabled").replaceWith("<a onclick=\"unlikeTrack()\" class=\"liked_button\"></a>");
+	  break;
+	case 'all':
+	  	$(".like_button_disabled").replaceWith("<a onclick=\"likeTrack()\" class=\"like_button\"></a>");
+		$(".liked_button_disabled").replaceWith("<a onclick=\"unlikeTrack()\" class=\"liked_button\"></a>");
+		$(".back_button_disabled").replaceWith("<a onclick=\"previousTrack()\" class=\"back_button\"></a>");
+		$(".play_button_disabled").replaceWith("<a onclick=\"playPauseTrack()\" class=\"play_button\"></a>");
+		$(".pause_button_disabled").replaceWith("<a onclick=\"playPauseTrack()\" class=\"pause_button\"></a>");
+		$(".forward_button_disabled").replaceWith("<a onclick=\"nextTrack()\" class=\"forward_button\"></a>");
+		$(".reblog_button_disabled").replaceWith("<a onclick=\"reblogTrack()\" class=\"reblog_button\"></a>");
+		$(".reload_button_disabled").replaceWith("<a onclick=\"reloadTracks()\" class=\"reload_button\"></a>");
+	  break;
+	default:
+	  
+	}
+	
+}
+
+function disableUI(buttonName) {
+	switch(buttonName)
+	{
+	case 'previousButton':
+	  $(".back_button").replaceWith("<a class=\"back_button_disabled\"></a>");
+	  break;
+	case 'nextButton':
+	  $(".forward_button").replaceWith("<a class=\"forward_button_disabled\"></a>");
+	  break;
+	case 'likeButton':
+	  $(".like_button").replaceWith("<a class=\"like_button_disabled\"></a>");
+	  break;
+	case 'likedButton':
+	  $(".liked_button").replaceWith("<a class=\"liked_button_disabled\"></a>");
+	  break;
+	case 'all':
+	  	$(".like_button").replaceWith("<a class=\"like_button_disabled\"></a>");
+		$(".liked_button").replaceWith("<a class=\"liked_button_disabled\"></a>");
+		$(".back_button").replaceWith("<a class=\"back_button_disabled\"></a>");
+		$(".play_button").replaceWith("<a class=\"play_button_disabled\"></a>");
+		$(".pause_button").replaceWith("<a class=\"pause_button_disabled\"></a>");
+		$(".forward_button").replaceWith("<a class=\"forward_button_disabled\"></a>");
+		$(".reblog_button").replaceWith("<a class=\"reblog_button_disabled\"></a>");
+		$(".reload_button").replaceWith("<a class=\"reload_button_disabled\"></a>");
+	  break;
+	default:
+	  
+	}
+}
+
+function didPause(trackIndex) {
+	$(".pause_button").replaceWith("<a onclick=\"playPauseTrack()\" class=\"play_button\"></a>");
+}
+
+function didStartPlaying(trackIndex) {
+	$(".play_button").replaceWith("<a onclick=\"playPauseTrack()\" class=\"pause_button\"></a>");
+	checkLiked();
+}
+
+function didEndPlaying(trackIndex) {
+	
+	nextTrack();
+	
+}
+
+function canPlay(trackIndex) {
+	//alert('trackIndex: ' + trackIndex + ' currentTrack: ' + currentTrack);
+	if (trackIndex === currentTrack) {
+		updateLabel();
+		enableUI('all');
+		if (currentTrack == 0) {
+			document.getElementById("track" + currentTrack).play();
+			//disableUI('previousButton');
+		}
+		displayBuyButtonWithService(safari.extension.settings.service);
+		displayCurrentTrack();
+		$(".play_button_disabled").replaceWith("<a onclick=\"playPauseTrack()\" class=\"play_button\"></a>");
+	}
+	
+}
+
+function buyTrack() {
+	alert("Buy with " + safari.extension.settings.service);
+}
+
+function playPauseTrack() {
+	if (document.getElementById("track" + currentTrack).paused) {
+		document.getElementById("track" + currentTrack).play();
+	} else {
+		document.getElementById("track" + currentTrack).pause();
+	}
+}
+
+function previousTrack() {
+	if (document.getElementById("track" + currentTrack).currentTime < 2 && currentTrack != 0) {
+		document.getElementById("track" + currentTrack).pause();
+		document.getElementById("track" + currentTrack).currentTime = 0;
+		currentTrack -= 1;
+		updateLabel();
+		document.getElementById("track" + currentTrack).play();
+		if (currentTrack == totalTrackCount) {
+			disableUI('nextButton');
+		} else {
+			enableUI('nextButton');
+		}
+		displayCurrentTrack();
+	} else {
+		document.getElementById("track" + currentTrack).currentTime = 0;
+	}
+}
+
+function nextTrack() {
+	
+	
+	if (currentTrack == totalTrackCount) {
+		var email = safari.extension.secureSettings.email;
+		var password = safari.extension.secureSettings.password;
+
+		if(!email || !password) {
+			alert("Please enter your Tumblr account details in the extension settings.");
+		} else {
+			getAudioPosts(email, password, (totalTrackCount + 1), myGlobal.numberOfTracksToFetch);
+			$(".current_track").replaceWith("<a class=\"current_track\"><span>Getting more tracks</span></a>");
+		}
+		disableUI('nextButton');
+		disableUI('previousButton');
+	} else {
+		document.getElementById("track" + currentTrack).pause();
+		document.getElementById("track" + currentTrack).currentTime = 0;
+		currentTrack += 1;
+		updateLabel();
+		document.getElementById("track" + currentTrack).play();
+		
+		if (currentTrack == 0) {
+			disableUI('previousButton');
+		} else {
+			enableUI('previousButton');
+		}
+		displayCurrentTrack();
+	}
+	
+	
+}
+
+function reblogTrack() {
+	var reblogURL = "http://www.tumblr.com/reblog/" + audioTrackArray[currentTrack].postId + "/" + audioTrackArray[currentTrack].reblogKey + "?redirect_to=%2Fdashboard";
+	openInTab(reblogURL);
+}
+
+function reloadTracks() {
+	document.getElementById("track" + currentTrack).pause();
+	document.getElementById("track" + currentTrack).currentTime = 0;
+	audioTrackArray = [];
+	currentTrack = 0;
+	totalTrackCount = 0;
+	disableUI('all');
+	$(".current_track").replaceWith("<a class=\"current_track_off\"></a>");
+	$(".buy_button").replaceWith("<a class=\"buy_button_off\"></a>");
+	$(".track_name").replaceWith("<a class=\"track_name\">Getting tracks...</a>");
+	$("#audioTracks").replaceWith("<div id=\"audioTracks\"></div>");
+	
+	var email = safari.extension.secureSettings.email;
+	var password = safari.extension.secureSettings.password;
+	
+	if(!email || !password) {
+		alert("Please enter your Tumblr account details in the extension settings.");
+	} else {
+		getAudioPosts(email, password, "0", myGlobal.numberOfTracksToFetch);
+	}
+}
+
+function likeTrack() {
+	var dataString = "email=" + safari.extension.secureSettings.email + "&password=" + safari.extension.secureSettings.password + "&post-id=" + audioTrackArray[currentTrack].postId  + "&reblog-key=" + audioTrackArray[currentTrack].reblogKey;
+	$.ajax({
+		type: "POST",
+		url: "http://www.tumblr.com/api/like",
+		data: dataString,
+		dataType: "html",
+		success: successfullyLiked,
+		error: likeRequestError
+	});
+	disableUI('likeButton');
+	disableUI('nextButton');
+	disableUI('previousButton');
+}
+
+function unlikeTrack() {
+	var dataString = "email=" + safari.extension.secureSettings.email + "&password=" + safari.extension.secureSettings.password + "&post-id=" + audioTrackArray[currentTrack].postId  + "&reblog-key=" + audioTrackArray[currentTrack].reblogKey;
+	$.ajax({
+		type: "POST",
+		url: "http://www.tumblr.com/api/unlike",
+		data: dataString,
+		dataType: "html",
+		success: successfullyUnliked,
+		error: unlikeRequestError
+	});
+	disableUI('likedButton');
+	disableUI('nextButton');
+	disableUI('previousButton');
+}
+
+function successfullyLiked(xml) {
+	$(".like_button_disabled").replaceWith("<a onclick=\"unlikeTrack()\" class=\"liked_button\"></a>");
+	enableUI('nextButton');
+	enableUI('previousButton');
+}
+
+function successfullyUnliked(xml) {
+	$(".liked_button_disabled").replaceWith("<a onclick=\"likeTrack()\" class=\"like_button\"></a>");
+	enableUI('nextButton');
+	enableUI('previousButton');
+}
+
+function requestError(XMLHttpRequest, textStatus, errorThrown) {
+	$(".track_name").replaceWith("<a class=\"track_name\">Error getting tracks. Check your account details in the extension settings.</a>");
+}
+
+function likeRequestError(XMLHttpRequest, textStatus, errorThrown) {
+	$(".track_name").replaceWith("<a class=\"track_name\">Error liking track</a>");
+	enableUI('nextButton');
+	enableUI('previousButton');
+}
+
+function unlikeRequestError(XMLHttpRequest, textStatus, errorThrown) {
+	$(".track_name").replaceWith("<a class=\"track_name\">Error unliking track</a>");
+	enableUI('nextButton');
+	enableUI('previousButton');
+}
+
+function checkLiked() {
+	if (audioTrackArray[currentTrack].liked === "true") {
+		$(".like_button").replaceWith("<a onclick=\"unlikeTrack()\" class=\"liked_button\"></a>");
+	} else {
+		$(".liked_button").replaceWith("<a onclick=\"likeTrack()\" class=\"like_button\"></a>");
+	}
+}
+
+function openInTab(source) {
+	var newTab=safari.self.browserWindow.openTab();
+	newTab.url=source;
+}
+
+function resetApp() {
+	location.reload();
+}
+
+safari.extension.settings.addEventListener("change", serviceChanged, false);
+
+const myGlobal = safari.extension.globalPage.contentWindow;
+
+var audioTrackArray = [];
+var currentTrack = 0;
+var totalTrackCount = 0;
+
+</script>
+
+	<!--<link rel="stylesheet" href="style.css" type="text/css" charset="utf-8">-->
+</head>
+	<div id	="extensionbarbody">
+		<body >
+	
+			<div id="controls">
+				<a class="like_button_disabled"></a>
+				<a class="back_button_disabled"></a>
+				<a class="play_button_disabled"></a>
+				<a class="forward_button_disabled"></a>
+				<a class="reblog_button_disabled"></a>
+				
+			</div>
+	
+			<div id="infobar">
+				<a class="current_track_off"></a>
+				<a class="buy_button_off"></a>
+				<a class="track_name">Getting tracks...</a>
+			</div>
+			
+			<div id="volume_slider"></div>
+			
+			<a class="reload_button_disabled"></a>
+			<div id="audioTracks">
+			</div>
+
+		</body>
+	</div>
+</html>

@@ -1,0 +1,281 @@
+body {
+	padding: 4px 8px 4px 8px;
+	margin: 0;
+	font-size: 12px;
+	font-weight: normal;
+}
+
+#extensionbarbody a {
+	text-decoration: none;
+	margin:0 0 0 -8px;
+	padding:0 0 0 -8px;
+}
+
+/* Controls */
+
+#controls {
+	width:155px;
+}
+
+#controls a {
+	margin:0;
+	text-decoration: none;
+    float: left;
+}
+
+#extensionbarbody a.like_button {
+	background:url(like_button.png) no-repeat 100% -46px;
+	width: 29px;
+	height: 23px;
+	text-align: center;
+	display:block;
+}
+
+#extensionbarbody a:active.like_button {
+	background: url(like_button.png) no-repeat 100% -23px;
+}
+
+#extensionbarbody a.like_button_disabled {
+	background:url(like_button.png) no-repeat 100% 0px;
+	width: 29px;
+	height: 23px;
+	text-align: center;
+	display:block;
+}
+
+#extensionbarbody a.liked_button {
+	background:url(liked_button.png) no-repeat 100% -46px;
+	width: 29px;
+	height: 23px;
+	text-align: center;
+	display:block;
+}
+
+#extensionbarbody a:active.liked_button {
+	background: url(liked_button.png) no-repeat 100% -23px;
+}
+
+#extensionbarbody a.liked_button_disabled {
+	background:url(liked_button.png) no-repeat 100% 0px;
+	width: 29px;
+	height: 23px;
+	text-align: center;
+	display:block;
+}
+
+#extensionbarbody a.back_button {
+	background:url(back_button.png) no-repeat 100% -46px;
+	width: 29px;
+	height: 23px;
+	text-align: center;
+	display:block;
+}
+
+#extensionbarbody a:active.back_button {
+	background: url(back_button.png) no-repeat 100% -23px;
+}
+
+#extensionbarbody a.back_button_disabled {
+	background:url(back_button.png) no-repeat 100% 0px;
+	width: 29px;
+	height: 23px;
+	text-align: center;
+	display:block;
+}
+
+#extensionbarbody a.play_button {
+	background:url(play_button.png) no-repeat 100% -46px;
+	width: 29px;
+	height: 23px;
+	text-align: center;
+	display:block;
+}
+
+#extensionbarbody a:active.play_button {
+	background: url(play_button.png) no-repeat 100% -23px;
+}
+
+#extensionbarbody a.play_button_disabled {
+	background:url(play_button.png) no-repeat 100% 0px;
+	width: 29px;
+	height: 23px;
+	text-align: center;
+	display:block;
+}
+
+#extensionbarbody a.pause_button {
+	background:url(pause_button.png) no-repeat 100% -46px;
+	width: 29px;
+	height: 23px;
+	text-align: center;
+	display:block;
+}
+
+#extensionbarbody a:active.pause_button {
+	background: url(pause_button.png) no-repeat 100% -23px;
+}
+
+#extensionbarbody a.pause_button_disabled {
+	background:url(pause_button.png) no-repeat 100% 0px;
+	width: 29px;
+	height: 23px;
+	text-align: center;
+	display:block;
+}
+
+#extensionbarbody a.forward_button {
+	background:url(forward_button.png) no-repeat 100% -46px;
+	width: 29px;
+	height: 23px;
+	text-align: center;
+	display:block;
+}
+
+#extensionbarbody a:active.forward_button {
+	background: url(forward_button.png) no-repeat 100% -23px;
+}
+
+#extensionbarbody a.forward_button_disabled {
+	background:url(forward_button.png) no-repeat 100% 0px;
+	width: 29px;
+	height: 23px;
+	text-align: center;
+	display:block;
+}
+
+#extensionbarbody a.reblog_button {
+	background:url(reblog_button.png) no-repeat 100% -46px;
+	width: 30px;
+	height: 23px;
+	text-align: center;
+	display:block;
+}
+
+#extensionbarbody a:active.reblog_button {
+	background: url(reblog_button.png) no-repeat 100% -23px;
+}
+
+#extensionbarbody a.reblog_button_disabled {
+	background:url(reblog_button.png) no-repeat 100% 0px;
+	width: 30px;
+	height: 23px;
+	text-align: center;
+	display:block;
+}
+
+#extensionbarbody a.reload_button {
+	background:url(reload_button.png) no-repeat 100% -46px;
+	width: 30px;
+	height: 23px;
+	text-align: center;
+	display:block;
+	position: absolute;
+	right: 8px;
+}
+
+#extensionbarbody a:active.reload_button {
+	background: url(reload_button.png) no-repeat 100% -23px;
+}
+
+#extensionbarbody a.reload_button_disabled {
+	background:url(reload_button.png) no-repeat 100% 0px;
+	width: 30px;
+	height: 23px;
+	text-align: center;
+	display:block;
+	position: absolute;
+	right: 8px;
+}
+
+
+#extensionbarbody a.buy_button {
+	background:url(buy_button.png);
+	width: 29px;
+	height: 14px;
+	position: absolute;
+	right: 5px;
+	top: 4px;
+}
+
+#extensionbarbody a:active.buy_button {
+	/*background:url(buy_button_selected.png) top left no-repeat;*/
+}
+
+#extensionbarbody a.buy_button_off {
+	width: 0px;
+	height: 0px;
+	position: absolute;
+	right: 5px;
+	top: 4px;
+}
+
+#extensionbarbody a.current_track {
+	background: url(info_bar_button_right.png) top right no-repeat;
+	height: 14px;
+	position: absolute;
+	left: 13px;
+	top: 4px;
+	padding: 0 4px 0 0;
+	display: block;
+}
+
+#extensionbarbody a.current_track span {
+	background: url(info_bar_button_left.png) top left no-repeat;
+	display: block;
+	padding: 0 0 0 4px;
+	color: #e8ebcf;
+	text-shadow: none;
+	font-size: 11px;
+	height: 14px;
+}
+
+#extensionbarbody a.current_track_off {
+	height: 0;
+	position: absolute;
+	left: 13px;
+	top: 4px;
+	padding: 0 4px 0 0;
+	display: block;
+}
+
+
+#extensionbarbody a.current_track {
+	
+}
+
+#infobar {
+	position:absolute;
+	left: 161px;
+	/*right: 136px;*/
+	right: 46px;
+	padding: 0 0 0 10px;
+	height: 23px;
+	text-align: center;
+	color: #4d5044;
+	background:url(info_bar_left.png) top left no-repeat;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#infobar div {
+}
+
+#extensionbarbody a.track_name {
+	background:url(info_bar_right.png) top right no-repeat;
+	padding: 3px 0 0 0;
+	height: 23px;
+	display:block;
+	color: #4d5044;
+}
+
+#extensionbarbody p {
+	float: left;
+}
+
+#volume_slider {
+	width: 80px;
+	height: 6px;
+	position: absolute;
+	right: 47px;
+	top: 12px;
+}

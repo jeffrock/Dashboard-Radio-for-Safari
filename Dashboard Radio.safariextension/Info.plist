@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Author</key>
+	<string>Jeff Rock</string>
+	<key>CFBundleDisplayName</key>
+	<string>Dashboard Radio</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.jeffrock.dashboardradio</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+	<key>Chrome</key>
+	<dict>
+		<key>Bars</key>
+		<array>
+			<dict>
+				<key>Filename</key>
+				<string>tumblrplaybar.html</string>
+				<key>Identifier</key>
+				<string>tumblrPlayBar</string>
+				<key>Label</key>
+				<string>Dashboard Radio Bar</string>
+			</dict>
+		</array>
+		<key>Global Page</key>
+		<string>global.html</string>
+		<key>Toolbar Items</key>
+		<array>
+			<dict>
+				<key>Command</key>
+				<string>toolbarButtonClicked</string>
+				<key>Identifier</key>
+				<string>tumblrplaybutton</string>
+				<key>Image</key>
+				<string>button.png</string>
+				<key>Label</key>
+				<string>Dashboard Radio</string>
+				<key>Palette Label</key>
+				<string>Dashboard Radio</string>
+				<key>Tool Tip</key>
+				<string>Dashboard Radio</string>
+			</dict>
+		</array>
+	</dict>
+	<key>Content</key>
+	<dict>
+		<key>Scripts</key>
+		<dict/>
+		<key>Stylesheets</key>
+		<array>
+			<string>style.css</string>
+		</array>
+	</dict>
+	<key>Description</key>
+	<string>Listen to the tracks in your Tumblr Dashboard.</string>
+	<key>ExtensionInfoDictionaryVersion</key>
+	<string>1.0</string>
+	<key>Permissions</key>
+	<dict>
+		<key>Website Access</key>
+		<dict>
+			<key>Allowed Domains</key>
+			<array>
+				<string>*.tumblr.com</string>
+			</array>
+			<key>Include Secure Pages</key>
+			<true/>
+			<key>Level</key>
+			<string>Some</string>
+		</dict>
+	</dict>
+	<key>Update Manifest URL</key>
+	<string>http://mobelux.com/dashboardradio/update.plist</string>
+	<key>Website</key>
+	<string>http://jeffrock.com</string>
+</dict>
+</plist>
