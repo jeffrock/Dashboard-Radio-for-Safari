@@ -97,9 +97,21 @@ function enteredPassword(event) {
 	}
 }
 
+function _globalInit() {
+	var theBar = activeBar();
+	var barWindow = theBar.contentWindow;
+	
+	theBar.hide();
+	
+	if (typeof barWindow.init === "function") {
+		theBar.init();
+	}
+}
+
 safari.extension.secureSettings.addEventListener("change", enteredPassword, false);
 
-var theBar = activeBar();
-theBar.hide();
+var audioTrackArray = [];
+
+_globalInit();
 
 </script>

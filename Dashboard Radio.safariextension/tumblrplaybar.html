@@ -8,6 +8,15 @@
 	<script type="text/javascript" src="jquery-ui-1.8.2.custom.min.js"></script>
 <script type="text/javascript">
 
+function init() {
+	var theArray = myGlobal.audioTrackArray;
+
+	if (!theArray)
+		return;
+		
+	//$("#volume_slider").slider({ value: safari.extension.settings.volume });
+}
+
 $(document).ready(function(){
 	var bars = safari.extension.bars;
 	var isABarShowing = false;
@@ -20,7 +29,6 @@ $(document).ready(function(){
 	if (isABarShowing == true) {
 		theBar.hide();
 	}
-	//$("#volume_slider").slider({ value: safari.extension.settings.volume });
 	
 });
 
@@ -37,8 +45,8 @@ function getAudioPosts(email, password, start, num) {
 }
 
 function displayCurrentTrack() {
-	$(".current_track_off").replaceWith("<a class=\"current_track\"><span>" + (currentTrack + 1) + " of " + audioTrackArray.length + "</span></a>");
-	$(".current_track").replaceWith("<a class=\"current_track\"><span>" + (currentTrack + 1) + " of " + audioTrackArray.length + "</span></a>");
+	$(".current_track_off").replaceWith("<a class=\"current_track\"><span>" + (currentTrack + 1) + " of " + myGlobal.audioTrackArray.length + "</span></a>");
+	$(".current_track").replaceWith("<a class=\"current_track\"><span>" + (currentTrack + 1) + " of " + myGlobal.audioTrackArray.length + "</span></a>");
 }
 
 function displayBuyButtonWithService(service) {
@@ -65,7 +73,7 @@ function parseXML(xml) {
 		var postId = $(this).attr("id");
 		var reblogKey = $(this).attr("reblog-key");
 		var audioPlays = $(this).attr("audio-plays");
-		var userName = $(this).attr("name");
+		var userName = $(this).attr("tumblelog");
 		var liked = $(this).attr("liked");
 		var audioUrl = $(this).find("download-url").text();
 		var track = $(this).find("id3-title").text();
@@ -73,10 +81,10 @@ function parseXML(xml) {
 		var album = $(this).find("id3-album").text();
 		var art = $(this).find("id3-album-art").text();
 		var audioTrackObject = {postUrl:postUrl, postId:postId, reblogKey:reblogKey, audioPlays:audioPlays, userName:userName, liked:liked, audioUrl:audioUrl, track:track, artist:artist, album:album, art:art};
-		audioTrackArray.push(audioTrackObject);
+		myGlobal.audioTrackArray.push(audioTrackObject);
 	});
 	
-	if (audioTrackArray.length > 0) {
+	if (myGlobal.audioTrackArray.length > 0) {
 		
 		
 		var audioTrackElements = $("#audioTracks").children();
@@ -84,7 +92,7 @@ function parseXML(xml) {
 		if (audioTrackElements.length == 0) {
 			// Create the div of audio objects
 			var audioDiv = "<div id=\"audioTracks\">";
-			$.each(audioTrackArray, function(i, val) {
+			$.each(myGlobal.audioTrackArray, function(i, val) {
 				audioDiv += "<audio preload=\"auto\" id=\"track" + i + "\" src=\"" + val.audioUrl + "\"></audio>";
 			});
 
@@ -93,7 +101,7 @@ function parseXML(xml) {
 			
 			$(".track_name").replaceWith("<a class=\"track_name\">Buffering...</a>");
 		} else {
-			var newTracksArray = audioTrackArray.slice(0);
+			var newTracksArray = myGlobal.audioTrackArray.slice(0);
 			newTracksArray.splice(0, (totalTrackCount + 1));
 			
 			$.each(newTracksArray, function(i, val) {
@@ -122,10 +130,10 @@ function parseXML(xml) {
 			
 		}
 		
-		totalTrackCount = audioTrackArray.length -1;
+		totalTrackCount = myGlobal.audioTrackArray.length -1;
 
 		// Attach listeners to the tracks
-		$.each(audioTrackArray, function(i, val) {
+		$.each(myGlobal.audioTrackArray, function(i, val) {
 			$("#track" + i).bind('canplay', function(){
 		        canPlay(i);
 		  	});
@@ -151,24 +159,24 @@ function parseXML(xml) {
 
 function updateLabel() {
 	var dataString;
-	var trackString = "<a href=\"javascript:openInTab('" + audioTrackArray[currentTrack].postUrl + "');\" class=\"track_name\">";
+	var trackString = "<a href=\"javascript:openInTab('" + myGlobal.audioTrackArray[currentTrack].postUrl + "');\" class=\"track_name\" title=\"Posted by " + myGlobal.audioTrackArray[currentTrack].userName + " (" + myGlobal.audioTrackArray[currentTrack].audioPlays + " plays)\">";
 	
-	if (audioTrackArray[currentTrack].track === "") {
+	if (myGlobal.audioTrackArray[currentTrack].track === "") {
 		trackString += "<strong>Unknown Track</strong> - ";
 	} else {
-		trackString += "<strong>" + audioTrackArray[currentTrack].track + "</strong> - ";
+		trackString += "<strong>" + myGlobal.audioTrackArray[currentTrack].track + "</strong> - ";
 	}
 	
-	if (audioTrackArray[currentTrack].artist === "") {
+	if (myGlobal.audioTrackArray[currentTrack].artist === "") {
 		 trackString += "Unknown Artist - ";
 	} else {
-		trackString += audioTrackArray[currentTrack].artist + " - ";
+		trackString += myGlobal.audioTrackArray[currentTrack].artist + " - ";
 	}
 	
-	if (audioTrackArray[currentTrack].album === "") {
+	if (myGlobal.audioTrackArray[currentTrack].album === "") {
 		trackString += "Unknown Album</a>";
 	} else {
-		trackString += audioTrackArray[currentTrack].album + "</a>";
+		trackString += myGlobal.audioTrackArray[currentTrack].album + "</a>";
 	}
 	
 	$(".track_name").replaceWith(trackString);
@@ -330,14 +338,14 @@ function nextTrack() {
 }
 
 function reblogTrack() {
-	var reblogURL = "http://www.tumblr.com/reblog/" + audioTrackArray[currentTrack].postId + "/" + audioTrackArray[currentTrack].reblogKey + "?redirect_to=%2Fdashboard";
+	var reblogURL = "http://www.tumblr.com/reblog/" + myGlobal.audioTrackArray[currentTrack].postId + "/" + myGlobal.audioTrackArray[currentTrack].reblogKey + "?redirect_to=%2Fdashboard";
 	openInTab(reblogURL);
 }
 
 function reloadTracks() {
 	document.getElementById("track" + currentTrack).pause();
 	document.getElementById("track" + currentTrack).currentTime = 0;
-	audioTrackArray = [];
+	myGlobal.audioTrackArray = [];
 	currentTrack = 0;
 	totalTrackCount = 0;
 	disableUI('all');
@@ -357,7 +365,7 @@ function reloadTracks() {
 }
 
 function likeTrack() {
-	var dataString = "email=" + safari.extension.secureSettings.email + "&password=" + safari.extension.secureSettings.password + "&post-id=" + audioTrackArray[currentTrack].postId  + "&reblog-key=" + audioTrackArray[currentTrack].reblogKey;
+	var dataString = "email=" + safari.extension.secureSettings.email + "&password=" + safari.extension.secureSettings.password + "&post-id=" + myGlobal.audioTrackArray[currentTrack].postId  + "&reblog-key=" + myGlobal.audioTrackArray[currentTrack].reblogKey;
 	$.ajax({
 		type: "POST",
 		url: "http://www.tumblr.com/api/like",
@@ -372,7 +380,7 @@ function likeTrack() {
 }
 
 function unlikeTrack() {
-	var dataString = "email=" + safari.extension.secureSettings.email + "&password=" + safari.extension.secureSettings.password + "&post-id=" + audioTrackArray[currentTrack].postId  + "&reblog-key=" + audioTrackArray[currentTrack].reblogKey;
+	var dataString = "email=" + safari.extension.secureSettings.email + "&password=" + safari.extension.secureSettings.password + "&post-id=" + myGlobal.audioTrackArray[currentTrack].postId  + "&reblog-key=" + myGlobal.audioTrackArray[currentTrack].reblogKey;
 	$.ajax({
 		type: "POST",
 		url: "http://www.tumblr.com/api/unlike",
@@ -415,7 +423,7 @@ function unlikeRequestError(XMLHttpRequest, textStatus, errorThrown) {
 }
 
 function checkLiked() {
-	if (audioTrackArray[currentTrack].liked === "true") {
+	if (myGlobal.audioTrackArray[currentTrack].liked === "true") {
 		$(".like_button").replaceWith("<a onclick=\"unlikeTrack()\" class=\"liked_button\"></a>");
 	} else {
 		$(".liked_button").replaceWith("<a onclick=\"likeTrack()\" class=\"like_button\"></a>");
@@ -429,13 +437,13 @@ function openInTab(source) {
 
 function resetApp() {
 	location.reload();
+	myGlobal.audioTrackArray = [];
 }
 
 safari.extension.settings.addEventListener("change", serviceChanged, false);
 
 const myGlobal = safari.extension.globalPage.contentWindow;
 
-var audioTrackArray = [];
 var currentTrack = 0;
 var totalTrackCount = 0;
 
@@ -443,8 +451,8 @@ var totalTrackCount = 0;
 
 	<!--<link rel="stylesheet" href="style.css" type="text/css" charset="utf-8">-->
 </head>
-	<div id	="extensionbarbody">
-		<body >
+	<body>
+		<div id	="extensionbarbody">
 	
 			<div id="controls">
 				<a class="like_button_disabled"></a>
@@ -466,7 +474,6 @@ var totalTrackCount = 0;
 			<a class="reload_button_disabled"></a>
 			<div id="audioTracks">
 			</div>
-
-		</body>
-	</div>
+		</div>
+	</body>
 </html>
