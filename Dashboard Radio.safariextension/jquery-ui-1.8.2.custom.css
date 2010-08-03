@@ -271,15 +271,15 @@
 ----------------------------------*/
 
 /* Corner radius */
-.ui-corner-tl { -moz-border-radius-topleft: 4px; -webkit-border-top-left-radius: 4px; border-top-left-radius: 4px; }
-.ui-corner-tr { -moz-border-radius-topright: 4px; -webkit-border-top-right-radius: 4px; border-top-right-radius: 4px; }
-.ui-corner-bl { -moz-border-radius-bottomleft: 4px; -webkit-border-bottom-left-radius: 4px; border-bottom-left-radius: 4px; }
-.ui-corner-br { -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px; border-bottom-right-radius: 4px; }
-.ui-corner-top { -moz-border-radius-topleft: 4px; -webkit-border-top-left-radius: 4px; border-top-left-radius: 4px; -moz-border-radius-topright: 4px; -webkit-border-top-right-radius: 4px; border-top-right-radius: 4px; }
-.ui-corner-bottom { -moz-border-radius-bottomleft: 4px; -webkit-border-bottom-left-radius: 4px; border-bottom-left-radius: 4px; -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px; border-bottom-right-radius: 4px; }
-.ui-corner-right {  -moz-border-radius-topright: 4px; -webkit-border-top-right-radius: 4px; border-top-right-radius: 4px; -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px; border-bottom-right-radius: 4px; }
-.ui-corner-left { -moz-border-radius-topleft: 4px; -webkit-border-top-left-radius: 4px; border-top-left-radius: 4px; -moz-border-radius-bottomleft: 4px; -webkit-border-bottom-left-radius: 4px; border-bottom-left-radius: 4px; }
-.ui-corner-all { -moz-border-radius: 4px; -webkit-border-radius: 400px; border-radius: 400px; }
+.ui-corner-tl { -moz-border-radius-topleft: 400px; -webkit-border-top-left-radius: 400px; border-top-left-radius: 400px; }
+.ui-corner-tr { -moz-border-radius-topright: 400px; -webkit-border-top-right-radius: 400px; border-top-right-radius: 400px; }
+.ui-corner-bl { -moz-border-radius-bottomleft: 400px; -webkit-border-bottom-left-radius: 400px; border-bottom-left-radius: 400px; }
+.ui-corner-br { -moz-border-radius-bottomright: 400px; -webkit-border-bottom-right-radius: 400px; border-bottom-right-radius: 400px; }
+.ui-corner-top { -moz-border-radius-topleft: 400px; -webkit-border-top-left-radius: 400px; border-top-left-radius: 400px; -moz-border-radius-topright: 400px; -webkit-border-top-right-radius: 400px; border-top-right-radius: 400px; }
+.ui-corner-bottom { -moz-border-radius-bottomleft: 400px; -webkit-border-bottom-left-radius: 400px; border-bottom-left-radius: 400px; -moz-border-radius-bottomright: 400px; -webkit-border-bottom-right-radius: 400px; border-bottom-right-radius: 400px; }
+.ui-corner-right {  -moz-border-radius-topright: 400px; -webkit-border-top-right-radius: 400px; border-top-right-radius: 400px; -moz-border-radius-bottomright: 400px; -webkit-border-bottom-right-radius: 400px; border-bottom-right-radius: 400px; }
+.ui-corner-left { -moz-border-radius-topleft: 400px; -webkit-border-top-left-radius: 400px; border-top-left-radius: 400px; -moz-border-radius-bottomleft: 400px; -webkit-border-bottom-left-radius: 400px; border-bottom-left-radius: 400px; }
+.ui-corner-all { -moz-border-radius: 400px; -webkit-border-radius: 400px; border-radius: 400px; }
 
 /* Overlays */
 .ui-widget-overlay { background: #666666 url(images/ui-bg_diagonals-thick_20_666666_40x40.png) 50% 50% repeat; opacity: .50;filter:Alpha(Opacity=50); }
@@ -287,7 +287,7 @@
 ----------------------------------*/
 .ui-slider { position: relative; text-align: left; }
 .ui-slider .ui-slider-handle { position: absolute; z-index: 2; width: 1.2em; height: 1.2em; cursor: default; }
-.ui-slider .ui-slider-range { position: absolute; z-index: 1; font-size: .7em; display: block; border: 0; background-position: 0 0; }
+.ui-slider .ui-slider-range { position: absolute; z-index: 1; font-size: .7em; display: block; -webkit-box-shadow:inset 0 0 2px #000; border: 0; background-position: 0 0; background:-webkit-gradient(linear, left top, left bottom, from(#c2c2c2), to(#b8b9bb), color-stop(0.5, #d3d3d3)); -webkit-border-radius: 400px; border-radius: 400px; }
 
 .ui-slider-horizontal {  border: none; background: -webkit-gradient(linear, left top, left bottom, from(#484949), to(#79797a), color-stop(0.5, #79797a)); -webkit-box-shadow: 0 1px 1px #e0e0e1;}
 .ui-slider-horizontal .ui-slider-handle { height:10px; width:10px; top: -.3em; margin-left: -.6em; border:1px solid #6e7071; background: -webkit-gradient(linear, left top, left bottom, from(#ebebeb), to(#abadae), color-stop(1.0, #abadae));}

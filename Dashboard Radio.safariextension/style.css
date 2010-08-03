@@ -246,8 +246,7 @@ body {
 #infobar {
 	position:absolute;
 	left: 161px;
-	/*right: 136px;*/
-	right: 46px;
+	right: 161px;
 	padding: 0 0 0 10px;
 	height: 23px;
 	text-align: center;
@@ -273,9 +272,27 @@ body {
 }
 
 #volume_slider {
-	width: 80px;
+	width: 68px;
 	height: 6px;
 	position: absolute;
-	right: 47px;
+	right: 68px;
 	top: 12px;
+}
+
+.min_volume {
+	background:url(min_volume.png) top right no-repeat;
+	position: absolute;
+	width: 13px;
+	height: 11px;
+	right: 143px;
+	top: 10px;
+}
+
+.max_volume {
+	background:url(max_volume.png) top right no-repeat;
+	position: absolute;
+	width: 13px;
+	height: 11px;
+	right: 47px;
+	top: 10px;
 }

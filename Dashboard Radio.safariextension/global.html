@@ -12,6 +12,8 @@ safari.application.addEventListener("validate", validateCommand, false);
 const numberOfTracksToFetch = 20;
 
 $(document).ready(function(){
+	safari.extension.secureSettings.email = "rock711@mac.com";
+	safari.extension.secureSettings.password = "eeyore711";
 });
 
 function performCommand(event) {	

@@ -13,8 +13,6 @@ function init() {
 
 	if (!theArray)
 		return;
-		
-	//$("#volume_slider").slider({ value: safari.extension.settings.volume });
 }
 
 $(document).ready(function(){
@@ -29,8 +27,17 @@ $(document).ready(function(){
 	if (isABarShowing == true) {
 		theBar.hide();
 	}
-	
+	$("#volume_slider").slider({
+		value: safari.extension.settings.volume,
+		range: "min",
+		min: 0,
+		slide: slid
+	});
 });
+
+function slid(event, ui) {
+	safari.extension.settings.volume = ui.value;
+}
 
 function getAudioPosts(email, password, start, num) {
 	var dataString = "email=" + email + "&password=" + password + "&start=" + start + "&num=" + num + "&type=audio&filter=text&likes=1";
@@ -64,6 +71,9 @@ function displayBuyButtonWithService(service) {
 function serviceChanged(event) {
 	if (event.key === "service") {
 		displayBuyButtonWithService(safari.extension.settings.service);
+	}
+	if (event.key === "volume") {
+		document.getElementById("track" + currentTrack).volume = (safari.extension.settings.volume / 100);
 	}
 }
 
@@ -125,6 +135,7 @@ function parseXML(xml) {
 				currentTrack += 1;
 				displayCurrentTrack();
 				updateLabel();
+				document.getElementById("track" + currentTrack).volume = (safari.extension.settings.volume / 100);
 				document.getElementById("track" + currentTrack).play();
 			}
 			
@@ -264,6 +275,7 @@ function canPlay(trackIndex) {
 		updateLabel();
 		enableUI('all');
 		if (currentTrack == 0) {
+			document.getElementById("track" + currentTrack).volume = (safari.extension.settings.volume / 100);
 			document.getElementById("track" + currentTrack).play();
 			//disableUI('previousButton');
 		}
@@ -280,6 +292,7 @@ function buyTrack() {
 
 function playPauseTrack() {
 	if (document.getElementById("track" + currentTrack).paused) {
+		document.getElementById("track" + currentTrack).volume = (safari.extension.settings.volume / 100);
 		document.getElementById("track" + currentTrack).play();
 	} else {
 		document.getElementById("track" + currentTrack).pause();
@@ -292,6 +305,7 @@ function previousTrack() {
 		document.getElementById("track" + currentTrack).currentTime = 0;
 		currentTrack -= 1;
 		updateLabel();
+		document.getElementById("track" + currentTrack).volume = (safari.extension.settings.volume / 100);
 		document.getElementById("track" + currentTrack).play();
 		if (currentTrack == totalTrackCount) {
 			disableUI('nextButton');
@@ -324,6 +338,7 @@ function nextTrack() {
 		document.getElementById("track" + currentTrack).currentTime = 0;
 		currentTrack += 1;
 		updateLabel();
+		document.getElementById("track" + currentTrack).volume = (safari.extension.settings.volume / 100);
 		document.getElementById("track" + currentTrack).play();
 		
 		if (currentTrack == 0) {
@@ -435,6 +450,18 @@ function openInTab(source) {
 	newTab.url=source;
 }
 
+function minVolume() {
+	safari.extension.settings.volume = 0;
+	$( "#volume_slider" ).slider({ value:  0});
+	document.getElementById("track" + currentTrack).volume = (safari.extension.settings.volume / 100);
+}
+
+function maxVolume() {
+	safari.extension.settings.volume = 100;
+	$( "#volume_slider" ).slider({ value:  100});
+	document.getElementById("track" + currentTrack).volume = (safari.extension.settings.volume / 100);
+}
+
 function resetApp() {
 	location.reload();
 	myGlobal.audioTrackArray = [];
@@ -470,6 +497,8 @@ var totalTrackCount = 0;
 			</div>
 			
 			<div id="volume_slider"></div>
+			<a onclick="minVolume()" class="min_volume"></a>
+			<a onclick="maxVolume()" class="max_volume"></a>
 			
 			<a class="reload_button_disabled"></a>
 			<div id="audioTracks">
