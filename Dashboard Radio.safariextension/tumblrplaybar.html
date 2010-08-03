@@ -56,6 +56,10 @@ function displayCurrentTrack() {
 	$(".current_track").replaceWith("<a class=\"current_track\"><span>" + (currentTrack + 1) + " of " + myGlobal.audioTrackArray.length + "</span></a>");
 }
 
+function displayViewButton() {
+	$(".view_button_off").replaceWith("<a onclick=\"viewTrack()\" class=\"view_button\"><span>VIEW</span></a>");
+}
+
 function displayBuyButtonWithService(service) {
 	if (service === "itunes") {
 		$(".buy_button").replaceWith("<a onclick=\"buyTrack()\" class=\"buy_button\"></a>");
@@ -169,28 +173,45 @@ function parseXML(xml) {
 }
 
 function updateLabel() {
-	var dataString;
-	var trackString = "<a href=\"javascript:openInTab('" + myGlobal.audioTrackArray[currentTrack].postUrl + "');\" class=\"track_name\" title=\"Posted by " + myGlobal.audioTrackArray[currentTrack].userName + " (" + myGlobal.audioTrackArray[currentTrack].audioPlays + " plays)\">";
-	
-	if (myGlobal.audioTrackArray[currentTrack].track === "") {
-		trackString += "<strong>Unknown Track</strong> - ";
+	if (safari.extension.settings.shouldviewuser == 0) {
+		var trackString = "<a href=\"javascript:toggleLabel();\" class=\"track_name\" title=\"Posted by " + myGlobal.audioTrackArray[currentTrack].userName + " (" + myGlobal.audioTrackArray[currentTrack].audioPlays + " plays)\">";
+
+		if (myGlobal.audioTrackArray[currentTrack].track === "") {
+			trackString += "<strong>Unknown Track</strong> - ";
+		} else {
+			trackString += "<strong>" + myGlobal.audioTrackArray[currentTrack].track + "</strong> - ";
+		}
+
+		if (myGlobal.audioTrackArray[currentTrack].artist === "") {
+			 trackString += "Unknown Artist - ";
+		} else {
+			trackString += myGlobal.audioTrackArray[currentTrack].artist + " - ";
+		}
+
+		if (myGlobal.audioTrackArray[currentTrack].album === "") {
+			trackString += "Unknown Album</a>";
+		} else {
+			trackString += myGlobal.audioTrackArray[currentTrack].album + "</a>";
+		}
+		
+		$(".track_name").replaceWith(trackString);
 	} else {
-		trackString += "<strong>" + myGlobal.audioTrackArray[currentTrack].track + "</strong> - ";
+		var trackString = "<a href=\"javascript:toggleLabel();\" class=\"track_name\"><strong>Posted by " + myGlobal.audioTrackArray[currentTrack].userName + "</strong> (" + myGlobal.audioTrackArray[currentTrack].audioPlays + " plays)</a>";
+		$(".track_name").replaceWith(trackString);
 	}
+}
+
+function toggleLabel() {
 	
-	if (myGlobal.audioTrackArray[currentTrack].artist === "") {
-		 trackString += "Unknown Artist - ";
+	if (safari.extension.settings.shouldviewuser == 0) {
+		
+		safari.extension.settings.shouldviewuser = 1;
+		updateLabel();
 	} else {
-		trackString += myGlobal.audioTrackArray[currentTrack].artist + " - ";
+		
+		safari.extension.settings.shouldviewuser = 0;
+		updateLabel();
 	}
-	
-	if (myGlobal.audioTrackArray[currentTrack].album === "") {
-		trackString += "Unknown Album</a>";
-	} else {
-		trackString += myGlobal.audioTrackArray[currentTrack].album + "</a>";
-	}
-	
-	$(".track_name").replaceWith(trackString);
 }
 
 function enableUI(buttonName) {
@@ -281,13 +302,37 @@ function canPlay(trackIndex) {
 		}
 		displayBuyButtonWithService(safari.extension.settings.service);
 		displayCurrentTrack();
+		displayViewButton();
 		$(".play_button_disabled").replaceWith("<a onclick=\"playPauseTrack()\" class=\"play_button\"></a>");
 	}
 	
 }
 
 function buyTrack() {
-	alert("Buy with " + safari.extension.settings.service);
+	var theURL  = "http://itunes.com";
+	myGlobal.audioTrackArray[currentTrack].track
+	myGlobal.audioTrackArray[currentTrack].album
+	myGlobal.audioTrackArray[currentTrack].artist
+	
+	if (myGlobal.audioTrackArray[currentTrack].artist != "") {
+		 theURL += "/" + myGlobal.audioTrackArray[currentTrack].artist;
+	}
+	
+	if (myGlobal.audioTrackArray[currentTrack].track != "") {
+		theURL += "/" + myGlobal.audioTrackArray[currentTrack].track;
+	} else if (myGlobal.audioTrackArray[currentTrack].album != "") {
+		theURL += "/" + myGlobal.audioTrackArray[currentTrack].album;
+	}
+	
+	theURL = theURL.replace(/ /g,"");
+	
+	if (safari.extension.settings.service === "itunes") {
+		openInTab(theURL);
+	}
+}
+
+function viewTrack() {
+	openInTab(myGlobal.audioTrackArray[currentTrack].postUrl);
 }
 
 function playPauseTrack() {
@@ -365,6 +410,7 @@ function reloadTracks() {
 	totalTrackCount = 0;
 	disableUI('all');
 	$(".current_track").replaceWith("<a class=\"current_track_off\"></a>");
+	$(".view_button").replaceWith("<a class=\"view_button_off\"></a>");
 	$(".buy_button").replaceWith("<a class=\"buy_button_off\"></a>");
 	$(".track_name").replaceWith("<a class=\"track_name\">Getting tracks...</a>");
 	$("#audioTracks").replaceWith("<div id=\"audioTracks\"></div>");
@@ -492,6 +538,7 @@ var totalTrackCount = 0;
 	
 			<div id="infobar">
 				<a class="current_track_off"></a>
+				<a class="view_button_off"></a>
 				<a class="buy_button_off"></a>
 				<a class="track_name">Getting tracks...</a>
 			</div>

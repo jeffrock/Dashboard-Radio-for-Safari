@@ -209,6 +209,35 @@ body {
 	top: 4px;
 }
 
+#extensionbarbody a.view_button {
+	background: url(info_bar_button_right.png) top right no-repeat;
+	height: 14px;
+	position: absolute;
+	right: 5px;
+	top: 4px;
+	padding: 0 4px 0 0;
+	display: block;
+}
+
+#extensionbarbody a.view_button span {
+	background: url(info_bar_button_left.png) top left no-repeat;
+	display: block;
+	padding: 0 0 0 4px;
+	color: #e8ebcf;
+	text-shadow: none;
+	font-size: 11px;
+	height: 14px;
+}
+
+#extensionbarbody a.view_button_off {
+	height: 0;
+	position: absolute;
+	right: 29px;
+	top: 4px;
+	padding: 0 0 0 4px;
+	display: block;
+}
+
 #extensionbarbody a.current_track {
 	background: url(info_bar_button_right.png) top right no-repeat;
 	height: 14px;
