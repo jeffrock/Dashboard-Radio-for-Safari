@@ -196,7 +196,7 @@ function updateLabel() {
 		
 		$(".track_name").replaceWith(trackString);
 	} else {
-		var trackString = "<a href=\"javascript:toggleLabel();\" class=\"track_name\"><strong>Posted by " + myGlobal.audioTrackArray[currentTrack].userName + "</strong> (" + myGlobal.audioTrackArray[currentTrack].audioPlays + " plays)</a>";
+		var trackString = "<a href=\"javascript:toggleLabel();\" class=\"track_name\">Posted by <strong>" + myGlobal.audioTrackArray[currentTrack].userName + "</strong> (" + myGlobal.audioTrackArray[currentTrack].audioPlays + " plays)</a>";
 		$(".track_name").replaceWith(trackString);
 	}
 }

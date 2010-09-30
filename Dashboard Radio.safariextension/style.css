@@ -11,6 +11,10 @@ body {
 	padding:0 0 0 -8px;
 }
 
+#infobar a:hover {
+	text-decoration: underline;
+}
+
 /* Controls */
 
 #controls {
@@ -195,6 +199,7 @@ body {
 	position: absolute;
 	right: 5px;
 	top: 4px;
+	text-decoration: none;
 }
 
 #extensionbarbody a:active.buy_button {
@@ -217,6 +222,7 @@ body {
 	top: 4px;
 	padding: 0 4px 0 0;
 	display: block;
+	text-decoration: none;
 }
 
 #extensionbarbody a.view_button span {
@@ -246,6 +252,7 @@ body {
 	top: 4px;
 	padding: 0 4px 0 0;
 	display: block;
+	text-decoration: none;
 }
 
 #extensionbarbody a.current_track span {
