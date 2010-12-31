@@ -7,7 +7,7 @@ Features
 * Liking. You can like and unlike right from the transport controls.
 * Reblogging. Love a track? Put it on your blog.
 * View track info. Clicking the track name toggles between the track name and info about the user who posted the track. You can even view the original post in a new tab by clicking the ‘view’ button.
-* Autoload. When you get to the end of the tracklist Dashboard Radio gets the next set and keeps the music playing.
+* Autoload. When you get to the end of the track list Dashboard Radio gets the next set and keeps the music playing.
 * Volume control. D.R. volume can be set independently of system volume.
 
 New in 1.1
