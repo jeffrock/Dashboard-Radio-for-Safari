@@ -1,0 +1,41 @@
+Dashboard Radio is a Safari Extension that allows you to listen to the tracks in your Tumblr Dashboard, iTunes style.
+
+Features
+--------
+
+* Transport controls. Play, pause, next and previous track.
+* Liking. You can like and unlike right from the transport controls.
+* Reblogging. Love a track? Put it on your blog.
+* View track info. Clicking the track name toggles between the track name and info about the user who posted the track. You can even view the original post in a new tab by clicking the ‘view’ button.
+* Autoload. When you get to the end of the tracklist Dashboard Radio gets the next set and keeps the music playing.
+* Volume control. D.R. volume can be set independently of system volume.
+
+New in 1.1
+=========
+
+* Independent volume control
+* Changed the info bar to toggle between the track and the user info.
+
+New in 1.0.1:
+==========
+
+* Hover over the track name to see who posted it and how many plays it’s gotten without having to click through to the full post.
+* Fixed a bug where the extension could lock during buffering.
+Hope you enjoy it!
+
+After installing be sure to set your Tumblr account details in Safari > Preferences > Extensions.
+
+FAQ
+====
+
+* The Dashboard Radio button is disabled. How do I enable it? It’s disabled because you haven’t entered your credentials. To enter your Tumblr credentials, go to Safari > Preferences > Extensions tab > Dashboard Radio. Remember to press the tab key or return key after entering your password or it will not be saved. This is a known bug with Safari Extensions preferences.
+
+* When I click the Dashboard Extension button I get the following error: “Error getting tracks. Check your account details in the extension settings.” What’s going on? Either your Tumblr credentials are wrong or there is an issue with the Tumblr service.
+
+* How do I see who posted a specific track? Click the name of the track to see who posted it and how many plays it has. Click it a second time to see the track info again.
+
+* Sometimes a track pauses and plays or refuses to play at all. What’s up? Some MP3s are larger than others and take longer to buffer in. When this occurs it’s usually only on the first loaded track and will clear up on its own. Some tracks are linked redirects or just don’t play nice for whatever reason. Click forward when this occurs to skip the offending track.
+
+* How do I turn this thing off? Tap the Dashboard Radio button to close DR. This will also reset the extension if there’s an issue.
+
+* I want to see a track list so I can jump forward/backward through tracks. Can I? Not yet, but it’s on my list.
