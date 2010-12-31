@@ -16,7 +16,7 @@ New in 1.1
 * Independent volume control
 * Changed the info bar to toggle between the track and the user info.
 
-New in 1.0.1:
+New in 1.0.1
 ==========
 
 * Hover over the track name to see who posted it and how many plays it’s gotten without having to click through to the full post.
